@@ -191,7 +191,7 @@
           <span class="muted">一行一个账号，字段用 ---- 分隔</span>
         </div>
         <div class="panel-body">
-          <textarea id="input" spellcheck="false" placeholder="phone----password----access_token----account_id----chatgpt_account_id----chatgpt_account_user_id----chatgpt_auth_user_id----chatgpt_plan_type----chatgpt_user_id----email----expires_at----id_token----refresh_token"></textarea>
+          <textarea id="input" spellcheck="false" placeholder="phone----password----access_token----account_id----chatgpt_account_id----chatgpt_account_user_id----chatgpt_auth_user_id----chatgpt_plan_type----chatgpt_user_id----email----expires_at----id_token----refresh_token----outlook_email----outlook_pass----outlook_clientid----outlook_token"></textarea>
           <div class="actions">
             <button type="button" id="convertBtn">转换</button>
             <button type="button" id="clearBtn" class="secondary">清空</button>
@@ -227,10 +227,13 @@
                 <th>phone</th>
                 <th>password</th>
                 <th>email</th>
+                <th>outlook_pass</th>
+                <th>outlook_clientid</th>
+                <th>outlook_token</th>
               </tr>
             </thead>
             <tbody id="accountsBody">
-              <tr><td colspan="4" class="muted">还没有解析内容。</td></tr>
+              <tr><td colspan="7" class="muted">还没有解析内容。</td></tr>
             </tbody>
           </table>
         </div>
@@ -250,7 +253,11 @@
       "email",
       "expires_at",
       "id_token",
-      "refresh_token"
+      "refresh_token",
+      "outlook_email",
+      "outlook_pass",
+      "outlook_clientid",
+      "outlook_token"
     ];
 
     const input = document.getElementById("input");
@@ -274,8 +281,8 @@
         const raw = line.trim();
         if (!raw) return;
         const parts = raw.split("----");
-        if (parts.length < 13) {
-          badLines.push(`第 ${index + 1} 行字段不足：${parts.length}/13`);
+        if (parts.length < 17) {
+          badLines.push(`第 ${index + 1} 行字段不足：${parts.length}/17`);
           return;
         }
         const phone = parts[0] || "";
@@ -314,7 +321,7 @@
     function renderAccounts(accounts) {
       accountsBody.innerHTML = "";
       if (!accounts.length) {
-        accountsBody.innerHTML = '<tr><td colspan="4" class="muted">还没有解析内容。</td></tr>';
+        accountsBody.innerHTML = '<tr><td colspan="7" class="muted">还没有解析内容。</td></tr>';
         return;
       }
       accounts.forEach((account, index) => {
@@ -324,6 +331,9 @@
           <td class="mono">${escapeHtml(account.phone)}</td>
           <td class="mono">${escapeHtml(account.password)}</td>
           <td>${escapeHtml(account.credentials.email || "")}</td>
+          <td class="mono">${escapeHtml(account.credentials.outlook_pass || "")}</td>
+          <td class="mono">${escapeHtml(account.credentials.outlook_clientid || "")}</td>
+          <td class="mono">${escapeHtml(account.credentials.outlook_token || "")}</td>
         `;
         accountsBody.appendChild(row);
       });
